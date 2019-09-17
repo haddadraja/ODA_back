@@ -11,6 +11,7 @@ pycurl = "*"
 flask = "*"
 beautifulsoup4 = "*"
 requests = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.7"

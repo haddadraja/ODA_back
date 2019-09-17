@@ -1,10 +1,8 @@
 # setting some directories and files
 YOLO_COCO_DIR = './yolo-coco'
-OBJECTS_CLASS_NAMES_FILE = '9k.names' #'coco.names'
-YOLO_CONFIG_FILE = 'yolo9000.cfg'
-YOLO_WEIGHTS_FILE = 'yolo9000.weights'
-
-IMAGE_TO_PROCESS = './test-images/soccer.jpg'
+OBJECTS_CLASS_NAMES_FILE = 'coco.names'
+YOLO_CONFIG_FILE = 'yolov3.cfg'
+YOLO_WEIGHTS_FILE = 'yolov3.weights'
 
 CONFIDENCE = 0.5
 THRESHOLD = 0.3
