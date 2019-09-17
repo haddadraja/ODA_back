@@ -1,11 +1,9 @@
-import webbrowser
-
 import requests
 
-def image_search(filePath='/Users/ali/Desktop/CHAISE.jpg'): #chaise_grise
+
+def image_search(file_path):
     search_url = 'http://www.google.hr/searchbyimage/upload'
-    multipart = {'encoded_image': (filePath, open(filePath, 'rb')), 'image_content': ''}
+    multipart = {'encoded_image': (file_path, open(file_path, 'rb')), 'image_content': ''}
     response = requests.post(search_url, files=multipart, allow_redirects=False)
     fetch_url = response.headers['Location']
-    #webbrowser.open(fetch_url)
     return fetch_url

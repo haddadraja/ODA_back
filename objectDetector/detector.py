@@ -6,7 +6,7 @@ import os
 
 
 # load the COCO class labels our YOLO model was trained on
-from detector_settings import YOLO_COCO_DIR, \
+from .detector_settings import YOLO_COCO_DIR, \
     OBJECTS_CLASS_NAMES_FILE, \
     YOLO_WEIGHTS_FILE, \
     YOLO_CONFIG_FILE, \
@@ -111,22 +111,11 @@ def run_detection(image_path: str):
             y -= 10
             w += 20
             h += 20
-
-            detected_objects.append(image[y: y + h, x: x + w])
-
-            # draw a bounding box rectangle and label on the image
-            #color = [int(c) for c in COLORS[classIDs[i]]]
-            #cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-
-            """
-            subIMG est l'image exacte de l'object dans la photo
-            subIMG = image[y: y + h, x: x + w]
-            """
-
-            #text = "{}: {:.4f}".format(FR_LABELS[classIDs[i]], confidences[i])
-            #cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
-    # show the output image
+            sub_img = image[y: y + h, x: x + w]
+            detected_objects.append(sub_img)
+            # class_name = LABELS[classIDs[i]]
+            # if class_name in detected_objects:
+            #     detected_objects[class_name].append(sub_img)
+            # else:
+            #     detected_objects[class_name] = [sub_img]
     return detected_objects
-    #cv2.imshow("Image", image)
-    #cv2.waitKey(0)
