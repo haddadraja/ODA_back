@@ -107,15 +107,10 @@ def run_detection(image_path: str):
             # extract the bounding box coordinates
             (x, y) = (boxes[i][0], boxes[i][1])
             (w, h) = (boxes[i][2], boxes[i][3])
-            x -= 10
-            y -= 10
-            w += 20
-            h += 20
+            x -= 50
+            y -= 50
+            w += 60
+            h += 60
             sub_img = image[y: y + h, x: x + w]
             detected_objects.append(sub_img)
-            # class_name = LABELS[classIDs[i]]
-            # if class_name in detected_objects:
-            #     detected_objects[class_name].append(sub_img)
-            # else:
-            #     detected_objects[class_name] = [sub_img]
     return detected_objects

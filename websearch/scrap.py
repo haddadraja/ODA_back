@@ -10,12 +10,17 @@ browser = webdriver.Chrome('websearch/chromedriver', chrome_options=options)
 
 
 def find_shopping_url(url):
-    browser.get(url)
-    url_shopping = browser.find_element_by_xpath('//*[@id="hdtb-msb-vis"]/div[4]/a').get_attribute('href')
-    return url_shopping
+    try:
+        #print('IMAGE SEARCH URL : ', url)
+        browser.get(url)
+        url_shopping = browser.find_element_by_xpath('//*[@id="hdtb-msb-vis"]/div[4]/a').get_attribute('href')
+        return url_shopping
+    except:
+        return None
 
 
 def scrap_similar(url):
+    #print('SHOPPING URL : ', url)
     browser.get(url)
     inner_html = browser.execute_script("return document.body.innerHTML")
     soup = BeautifulSoup(inner_html, "html.parser")
@@ -29,4 +34,14 @@ def scrap_similar(url):
             'image': elem.find('img')['src']
         }
         objects.append(obj)
+    print("OBJECTQ===>", len(objects))
     return objects
+
+
+def run(image):
+    shopping_url = find_shopping_url(image_search(image))
+    print("SOJKDNKJDKJDBDKJBKJBD=======> ", shopping_url)
+    if shopping_url:
+        return scrap_similar(shopping_url)
+    else:
+        return []
