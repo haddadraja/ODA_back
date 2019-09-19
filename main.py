@@ -1,49 +1,54 @@
+import base64
 import glob
 import uuid
 import cv2
-from flask import Flask
+from flask import Flask, render_template
 from objectDetector.detector import run_detection
 from websearch.scrap import run
 import os
 
-WORK_DIR = 'workDir'
+WORK_DIR = 'static'  # 'workDir'
+WORK_DIR_PERSIST = 'workDirPersist'
 app = Flask(__name__)
+
+
+def create_work_dirs():
+    if not os.path.exists(WORK_DIR):
+        os.mkdir(WORK_DIR)
+    if not os.path.exists(WORK_DIR_PERSIST):
+        os.mkdir(WORK_DIR_PERSIST)
+
+
+def save_image(image_array):
+    cv2.imwrite('/'.join([WORK_DIR_PERSIST, uuid.uuid1().__str__()]) + '.jpg', image_array)
+    cv2.imwrite('/'.join([WORK_DIR, uuid.uuid1().__str__()]) + '.jpg', image_array)
 
 
 def save_detected_images(detected_images: list):
     if detected_images.__len__().__eq__(0):
         return False
-    if not os.path.exists(WORK_DIR):
-        os.mkdir(WORK_DIR)
-    if not os.path.exists('workDirPersist'):
-        os.mkdir('workDirPersist')
+    create_work_dirs()
     for image_array in detected_images:
-        #im = Image.fromarray(image_array)
-        #im.save('/'.join([WORK_DIR, uuid.uuid1().__str__()]) + '.jpg')
-        #im.save('/'.join(['workDirPersist', uuid.uuid1().__str__()]) + '.jpg')
-        cv2.imwrite('/'.join(['workDirPersist', uuid.uuid1().__str__()]) + '.jpg', image_array)
-        cv2.imwrite('/'.join([WORK_DIR, uuid.uuid1().__str__()]) + '.jpg', image_array)
+        save_image(image_array)
     return True
 
 
 def search_on_google_shopping():
     similar_products = {}
     images = glob.glob(WORK_DIR + '/*')
-    print(">>> images saved", images)
     for image in images:
         similar_products[image] = run(image)
-        os.remove(image)
     return similar_products
 
 
 @app.route("/search")
 def search_request():
-    detected_objects = run_detection('test-images/ordi.jpg')
-    if detected_objects is not None or detected_objects.__len__().__gt__(0):
+    detected_objects = run_detection('test-images/chaise.jpg')
+    if detected_objects is not None and detected_objects.__len__().__ge__(1):
         if save_detected_images(detected_objects):
-            x = search_on_google_shopping()
-            print('\n\n\n\n X', x)
-            return x
+            data = search_on_google_shopping()
+            temp = render_template('template.html', data=data)
+            return temp
     else:
         return []
 
